@@ -833,10 +833,10 @@ export default function WeddingInvitation({
               <div className="wedding-diamond relative my-5 min-[390px]:my-6" />
               <div className="relative text-shadow-wedding">
                 <div className="mb-1.5 text-[clamp(19px,5vw,22px)] font-semibold tracking-[0.06em] text-(--ink) min-[390px]:mb-2">
-                  Whish Money
+                  Personal Account
                 </div>
-                <p className="font-registry-numbers whitespace-pre-line text-[clamp(15px,4vw,17px)] leading-7 tracking-[0.04em] text-(--ink) min-[390px]:leading-8">
-                  Account ID: 10218001-03{`\n`}Phone number: +971 558951417
+                <p className="font-registry-numbers text-[clamp(15px,4vw,17px)] leading-7 tracking-[0.04em] text-(--ink) min-[390px]:leading-8">
+                  Phone number: +971 558951417
                 </p>
               </div>
             </div>
