@@ -15,11 +15,14 @@ function getSiteUrl() {
 }
 
 const siteUrl = getSiteUrl();
-const coverImageUrl = new URL("/uploads/IMG_0234.JPEG", siteUrl).toString();
+// Use a lightweight 1200x630 cover for link previews. WhatsApp (and most
+// chat apps) will not render Open Graph images larger than ~300 KB, so the
+// full-resolution photos in /uploads are unsuitable as preview images.
+const coverImageUrl = new URL("/uploads/whatsapp-cover.jpg", siteUrl).toString();
 const previewImage = {
   url: coverImageUrl,
-  width: 576,
-  height: 1024,
+  width: 1200,
+  height: 630,
   alt: "Joe and Elissa wedding invitation",
   type: "image/jpeg",
 };
