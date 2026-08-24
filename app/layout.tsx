@@ -3,11 +3,15 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 function getSiteUrl() {
+  // The site is served from the joeelissa subdomain. metadataBase must match
+  // the real host, otherwise Open Graph images resolve to an absolute URL on
+  // the wrong domain (the apex) and chat crawlers like WhatsApp fail to
+  // download the preview image. NEXT_PUBLIC_SITE_URL can override this.
   const configuredUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.VERCEL_PROJECT_PRODUCTION_URL ??
     process.env.VERCEL_URL ??
-    "https://mywedding.events";
+    "https://joeelissa.mywedding.events";
 
   return new URL(
     configuredUrl.startsWith("http") ? configuredUrl : `https://${configuredUrl}`,
