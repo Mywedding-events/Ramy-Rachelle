@@ -71,52 +71,341 @@ function getCountdown(): Countdown {
   };
 }
 
-function CalendarIcon({ className = "" }: { className?: string }) {
+function ChurchIcon({ className = "" }: { className?: string }) {
   return (
     <svg
       className={className}
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
+      width="42"
+      height="42"
+      viewBox="0 0 42 42"
       fill="none"
       aria-hidden="true"
     >
-      <rect
-        x="6"
-        y="9"
-        width="28"
-        height="25"
-        rx="3"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
       <path
-        d="M6 16h28M13 5v7M27 5v7"
+        d="M21 3v9m-4-5h8M10 38V20l11-8 11 8v18M5 38h32M17 38V27h8v11M13 23h3m10 0h3"
         stroke="currentColor"
         strokeWidth="1.4"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function LocationIcon({ className = "" }: { className?: string }) {
+function CelebrationIcon({ className = "" }: { className?: string }) {
   return (
     <svg
       className={className}
-      width="40"
-      height="44"
-      viewBox="0 0 40 44"
+      width="42"
+      height="42"
+      viewBox="0 0 42 42"
       fill="none"
       aria-hidden="true"
     >
       <path
-        d="M20 3C12.8 3 7 8.8 7 16c0 9 13 24 13 24s13-15 13-24c0-7.2-5.8-13-13-13z"
+        d="m10 7 5 12c1.6 3.8-.2 8.1-4 9.7s-8.1-.2-9.7-4L.5 22.8M5 38l6-9.3M2 38h7M32 7l-5 12c-1.6 3.8.2 8.1 4 9.7s8.1-.2 9.7-4l.8-1.9M37 38l-6-9.3M33 38h7M14.5 14h-7m20 0h7"
         stroke="currentColor"
         strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <circle cx="20" cy="16" r="4.5" stroke="currentColor" strokeWidth="1.4" />
     </svg>
+  );
+}
+
+function GroomIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="42"
+      height="42"
+      viewBox="0 0 42 42"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M14 5 21 11 28 5l7 7-4 5v20H11V17l-4-5 7-7Zm0 0 2 13 5-7 5 7 2-13M21 11v26m-3-12h6"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BrideIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="42"
+      height="42"
+      viewBox="0 0 42 42"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M17 5c0 3 1.2 5.2 4 7 2.8-1.8 4-4 4-7M17 5h8l2 12 9 20H6l9-20 2-12Zm-2 12c3.8 2.2 8.2 2.2 12 0M12 25c5.8 3 12.2 3 18 0"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+const ITINERARY_VIEWBOX_WIDTH = 440;
+const ITINERARY_VIEWBOX_HEIGHT = 1000;
+const itineraryRoute =
+  "M 220 24 C 270 38, 315 52, 315 115 C 315 210, 125 205, 125 310 C 125 420, 315 405, 315 520 C 315 635, 125 620, 125 750 C 125 840, 245 860, 205 910";
+
+function WeddingJourney({ id }: { id: string }) {
+  const routeContainerRef = useRef<HTMLDivElement>(null);
+  const routePathRef = useRef<SVGPathElement>(null);
+  const heartRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const routeContainer = routeContainerRef.current;
+    const routePath = routePathRef.current;
+    const heart = heartRef.current;
+    if (!routeContainer || !routePath || !heart) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    let frame = 0;
+    let journeyTop = 0;
+    let journeyHeight = 0;
+    const routeLength = routePath.getTotalLength();
+    const journeySection = routeContainer.closest("section");
+
+    const placeHeart = (progress: number) => {
+      const point = routePath.getPointAtLength(routeLength * progress);
+      heart.style.left = `${(point.x / ITINERARY_VIEWBOX_WIDTH) * 100}%`;
+      heart.style.top = `${(point.y / ITINERARY_VIEWBOX_HEIGHT) * 100}%`;
+    };
+
+    const measure = () => {
+      if (!journeySection) return;
+      journeyTop = (journeySection as HTMLElement).offsetTop;
+      journeyHeight = (journeySection as HTMLElement).offsetHeight;
+    };
+
+    const update = () => {
+      frame = 0;
+      if (reducedMotion) {
+        placeHeart(0.06);
+        return;
+      }
+
+      const viewportHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+      const progress = Math.max(
+        0,
+        Math.min(
+          1,
+          (window.scrollY - journeyTop) /
+            Math.max(journeyHeight - viewportHeight, 1),
+        ),
+      );
+      placeHeart(progress);
+    };
+
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    const measureAndUpdate = () => {
+      measure();
+      scheduleUpdate();
+    };
+
+    measureAndUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", measureAndUpdate);
+    const resizeObserver = new ResizeObserver(measureAndUpdate);
+    resizeObserver.observe(journeySection ?? routeContainer);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", measureAndUpdate);
+      resizeObserver.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <section
+      id={id}
+      className="relative flex min-h-svh flex-col items-center overflow-hidden px-4 pb-[110px] pt-[76px] text-center min-[390px]:px-5 min-[390px]:pb-[120px] min-[390px]:pt-24"
+      data-screen-label="03 Ceremony"
+    >
+      <div className="w-full max-w-[700px]">
+        <header className="relative z-10 mx-auto w-full max-w-[430px]">
+          <p className="reveal text-shadow-wedding text-[12px] uppercase tracking-[0.3em] text-[var(--ink-soft)]">
+            Our wedding day
+          </p>
+          <h2 className="reveal text-shadow-wedding font-script mt-2 text-[clamp(48px,13vw,68px)] leading-[1.04] text-[var(--ink)]">
+            August 2027
+          </h2>
+          <div
+            className="reveal mx-auto mt-5 grid max-w-[330px] grid-cols-5 items-center text-[14px] tracking-[0.16em] text-[var(--ink-soft)]"
+            aria-label="Wedding date: August 27, 2027"
+          >
+            <span>25</span>
+            <span>26</span>
+            <span aria-hidden="true" />
+            <span>28</span>
+            <span>29</span>
+          </div>
+        </header>
+
+        <div
+          ref={routeContainerRef}
+          className="relative mx-auto -mt-8 h-[1120px] w-full min-[700px]:h-[1200px]"
+        >
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+            viewBox={`0 0 ${ITINERARY_VIEWBOX_WIDTH} ${ITINERARY_VIEWBOX_HEIGHT}`}
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              ref={routePathRef}
+              d={itineraryRoute}
+              stroke="var(--gold-line)"
+              strokeWidth="1.6"
+              strokeDasharray="5 8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          <div
+            ref={heartRef}
+            className="pointer-events-none absolute z-20 h-[48px] w-[52px] -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_3px_9px_rgba(30,18,10,0.4)]"
+            style={{ left: "50%", top: "2.4%" }}
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 52 48" className="h-full w-full">
+              <path
+                d="M26 45C21.7 40.5 5 28.7 5 15.8 5 8.9 9.9 4 16.4 4c4.1 0 7.7 2.2 9.6 5.7C27.9 6.2 31.5 4 35.6 4 42.1 4 47 8.9 47 15.8 47 28.7 30.3 40.5 26 45Z"
+                fill="var(--gold)"
+                stroke="var(--ink)"
+                strokeWidth="1"
+              />
+              <text
+                x="26"
+                y="23"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="#3a2615"
+                fontFamily="var(--serif)"
+                fontSize="16"
+                fontWeight="600"
+              >
+                27
+              </text>
+            </svg>
+          </div>
+
+          <article className="reveal absolute left-0 top-[8%] z-10 w-[42%] pr-2 text-right min-[700px]:pr-8">
+            <GroomIcon className="ml-auto h-9 w-9 text-[var(--ink)] drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
+            <p className="text-shadow-wedding mt-2 text-[11px] uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              Groom House
+            </p>
+            <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
+              Antelias
+            </h3>
+            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
+              Time TBD
+            </p>
+            <a
+              className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+              href="https://www.google.com/maps?q=33.9128848,35.6038602&z=17&hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Map
+            </a>
+          </article>
+
+          <article className="reveal absolute right-0 top-[29%] z-10 w-[42%] pl-2 text-left min-[700px]:pl-8">
+            <BrideIcon className="h-9 w-9 text-[var(--ink)] drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
+            <p className="text-shadow-wedding mt-2 text-[11px] uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              Bride House
+            </p>
+            <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
+              Horsh Tabet
+            </h3>
+            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
+              Time TBD
+            </p>
+            <a
+              className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+              href="https://www.google.com/maps?q=33.8726455,35.5351834&z=17&hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Map
+            </a>
+          </article>
+
+          <article className="reveal absolute left-0 top-[51%] z-10 w-[42%] pr-2 text-right min-[700px]:pr-8">
+            <ChurchIcon className="ml-auto h-9 w-9 text-[var(--ink)] drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
+            <p className="text-shadow-wedding mt-2 text-[11px] uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              Wedding Ceremony
+            </p>
+            <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
+              St. Michael Church
+            </h3>
+            <p className="text-shadow-wedding mt-1 text-[clamp(15px,4vw,18px)] leading-snug text-[var(--ink)]">
+              Antelias
+            </p>
+            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
+              August 27 · Time TBD
+            </p>
+            <a
+              className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+              href="https://www.google.com/maps/search/?api=1&query=St.+Michael+Church+Antelias+Lebanon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Map
+            </a>
+          </article>
+
+          <article className="reveal absolute right-0 top-[74%] z-10 w-[42%] pl-2 text-left min-[700px]:pl-8">
+            <CelebrationIcon className="h-9 w-9 text-[var(--ink)] drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
+            <p className="text-shadow-wedding mt-2 text-[11px] uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              Reception &amp; Dinner
+            </p>
+            <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
+              L’heritage Venue
+            </h3>
+            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
+              Time TBD
+            </p>
+            <a
+              className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+              href="https://www.google.com/maps/search/?api=1&query=Lheritage+Naher+Kaleb+Lebanon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Map
+            </a>
+          </article>
+
+          <div className="reveal absolute bottom-0 left-1/2 z-10">
+            <p className="text-shadow-wedding -translate-x-1/2 whitespace-nowrap font-script text-[clamp(34px,9vw,48px)] text-[var(--ink)]">
+              Celebrate with us
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -128,27 +417,6 @@ function Reveal({
   className?: string;
 }) {
   return <div className={`reveal ${className}`}>{children}</div>;
-}
-
-function ButtonLink({
-  children,
-  href,
-  className = "",
-}: {
-  children: ReactNode;
-  href: string;
-  className?: string;
-}) {
-  return (
-    <a
-      className={`inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-[2px] border border-[var(--gold-line)] bg-white/[0.04] px-[26px] py-[13px] font-serif-wedding text-base uppercase tracking-[0.12em] text-[var(--ink)] no-underline transition duration-300 ease-in-out hover:border-[var(--ink)] hover:bg-white/[0.14] active:scale-95 ${className}`}
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  );
 }
 
 function RsvpButton({
@@ -243,6 +511,7 @@ export default function WeddingInvitation({
   const lockRef = useRef(false);
   const currentRef = useRef(0);
   const touchStartRef = useRef<number | null>(null);
+  const touchScrollingJourneyRef = useRef(false);
   const sectionIds = useMemo(
     () => sections.map((_, index) => `section-${index + 1}`),
     [],
@@ -392,7 +661,20 @@ export default function WeddingInvitation({
       }, 760);
     };
 
+    const canScrollInsideJourney = (direction: number) => {
+      const journey = sectionElements[2];
+      if (!journey) return false;
+      const top = journey.offsetTop;
+      const bottom = top + journey.offsetHeight;
+      const viewportBottom = window.scrollY + window.innerHeight;
+
+      return direction > 0
+        ? window.scrollY >= top - 2 && viewportBottom < bottom - 2
+        : viewportBottom <= bottom + 2 && window.scrollY > top + 2;
+    };
+
     const onWheel = (event: WheelEvent) => {
+      if (canScrollInsideJourney(event.deltaY)) return;
       event.preventDefault();
       if (lockRef.current) return;
       if (event.deltaY > 8) goTo(currentRef.current + 1);
@@ -401,9 +683,11 @@ export default function WeddingInvitation({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        if (canScrollInsideJourney(1)) return;
         event.preventDefault();
         goTo(currentRef.current + 1);
       } else if (["ArrowUp", "PageUp"].includes(event.key)) {
+        if (canScrollInsideJourney(-1)) return;
         event.preventDefault();
         goTo(currentRef.current - 1);
       } else if (event.key === "Home") {
@@ -417,14 +701,28 @@ export default function WeddingInvitation({
 
     const onTouchStart = (event: TouchEvent) => {
       touchStartRef.current = event.touches[0]?.clientY ?? null;
+      touchScrollingJourneyRef.current = false;
     };
 
     const onTouchMove = (event: TouchEvent) => {
+      const currentY = event.touches[0]?.clientY;
+      if (touchStartRef.current !== null && currentY !== undefined) {
+        const direction = touchStartRef.current - currentY;
+        if (canScrollInsideJourney(direction)) {
+          touchScrollingJourneyRef.current = true;
+          return;
+        }
+      }
       event.preventDefault();
     };
 
     const onTouchEnd = (event: TouchEvent) => {
       if (touchStartRef.current === null || lockRef.current) return;
+      if (touchScrollingJourneyRef.current) {
+        touchStartRef.current = null;
+        touchScrollingJourneyRef.current = false;
+        return;
+      }
       const distance =
         touchStartRef.current -
         (event.changedTouches[0]?.clientY ?? touchStartRef.current);
@@ -435,9 +733,10 @@ export default function WeddingInvitation({
 
     const onResize = () => {
       syncActiveSection();
-      window.scrollTo({
-        top: sectionElements[currentRef.current]?.offsetTop ?? 0,
-      });
+      if (currentRef.current !== 2)
+        window.scrollTo({
+          top: sectionElements[currentRef.current]?.offsetTop ?? 0,
+        });
       revealVisibleSections();
     };
 
@@ -756,48 +1055,7 @@ export default function WeddingInvitation({
           </div>
         </section>
 
-        <section
-          id={sectionIds[2]}
-          className="flex min-h-svh flex-col items-center justify-center px-7 py-12 text-center min-[390px]:pb-[120px] min-[390px]:pt-24 max-[380px]:px-5 max-[380px]:py-8 max-[380px]:min-h-dvh"
-          data-screen-label="03 Ceremony"
-        >
-          <div className="flex w-full max-w-[430px] flex-col items-center">
-            <h2 className="reveal text-shadow-wedding font-script text-[clamp(42px,12vw,64px)] leading-[1.04] text-(--ink)">
-              Wedding Ceremony
-            </h2>
-            <div className="wedding-rule reveal my-4 max-[380px]:my-3" />
-            <CalendarIcon className="reveal mx-auto block h-9 w-9 text-(--ink) drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
-            <p className="reveal text-shadow-wedding mt-1 text-[clamp(17px,4.6vw,21px)] leading-[1.55] tracking-[0.04em] text-(--ink) min-[390px]:mt-1.5 min-[390px]:leading-[1.75]">
-              August 27 · Time TBD
-            </p>
-            <LocationIcon className="reveal mx-auto mt-5 block h-10 w-9 text-(--ink) drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:mt-[30px] min-[390px]:h-11 min-[390px]:w-10" />
-            <p className="reveal text-shadow-wedding mt-1 text-[clamp(17px,4.6vw,21px)] font-semibold leading-[1.55] text-(--ink) min-[390px]:leading-[1.75]">
-              St. Michael Church
-            </p>
-            <p className="reveal text-shadow-wedding text-[clamp(17px,4.6vw,21px)] leading-[1.55] text-(--ink) min-[390px]:leading-[1.75]">
-              Antelias
-            </p>
-            <ButtonLink
-              className="reveal mt-4 max-[380px]:px-5 max-[380px]:py-[11px] max-[380px]:text-sm min-[390px]:mt-[22px]"
-              href="https://www.google.com/maps/search/?api=1&query=St.+Michael+Church+Antelias+Lebanon"
-            >
-              Church Location
-            </ButtonLink>
-            <div className="wedding-rule reveal my-4 max-[380px]:my-3" />
-            <p className="reveal text-shadow-wedding text-[clamp(17px,4.6vw,21px)] italic leading-[1.55] text-(--ink-soft) min-[390px]:leading-[1.75]">
-              Followed by Reception &amp; Dinner
-            </p>
-            <p className="reveal text-shadow-wedding mt-2.5 text-[clamp(17px,4.6vw,21px)] font-semibold leading-[1.55] text-(--ink) min-[390px]:mt-3.5 min-[390px]:leading-[1.75]">
-              Lheritage Naher Kaleb · Time TBD
-            </p>
-            <ButtonLink
-              className="reveal mt-4 max-[380px]:px-5 max-[380px]:py-[11px] max-[380px]:text-sm min-[390px]:mt-[18px]"
-              href="https://www.google.com/maps/search/?api=1&query=Lheritage+Naher+Kaleb+Lebanon"
-            >
-              Venue Location
-            </ButtonLink>
-          </div>
-        </section>
+        <WeddingJourney id={sectionIds[2]} />
 
         <section
           id={sectionIds[3]}
