@@ -365,7 +365,7 @@ function WeddingJourney({ id }: { id: string }) {
               Antelias
             </p>
             <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
-              August 27 · Time TBD
+              August 27 · 7 pm
             </p>
             <a
               className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
@@ -386,7 +386,7 @@ function WeddingJourney({ id }: { id: string }) {
               L’heritage Venue
             </h3>
             <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
-              Time TBD
+              August 27 · 9 pm
             </p>
             <a
               className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
