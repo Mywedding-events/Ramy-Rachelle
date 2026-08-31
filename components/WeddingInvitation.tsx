@@ -34,7 +34,7 @@ const sections = [
   "RSVP",
   "Together",
 ];
-const weddingDate = new Date("2026-08-16T17:30:00").getTime();
+const weddingDate = new Date("2027-08-27T00:00:00").getTime();
 
 type Countdown = {
   days: string;
@@ -660,14 +660,18 @@ export default function WeddingInvitation({
         >
           <div className="w-full max-w-[430px]">
             <h1 className="reveal text-shadow-wedding font-script my-[0.12em] pb-[0.08em] text-[clamp(58px,16vw,88px)] leading-[1.08] text-[var(--ink)]">
-              Joe &amp; Elissa
+              Ramy
+              <br />
+              &amp;
+              <br />
+              Rachelle
             </h1>
             <p className="reveal text-shadow-wedding font-serif-wedding text-[clamp(22px,6vw,30px)] italic leading-tight text-(--ink)">
               Are getting married!
             </p>
             <div className="wedding-rule reveal" />
             <p className="reveal text-shadow-wedding text-[15px] uppercase tracking-[0.18em] text-[var(--ink-soft)]">
-              Sunday · August 16 · 2026
+              Friday · August 27 · 2027
             </p>
             <div className="reveal mt-[34px] flex justify-center gap-3.5">
               {[
@@ -727,19 +731,18 @@ export default function WeddingInvitation({
         >
           <div className="w-full max-w-[430px]">
             <p className="reveal text-shadow-wedding text-[clamp(19px,5.2vw,22px)] italic leading-[1.7] text-[var(--ink)]">
-              &quot;So they are no longer two, but one flesh. Therefore what God
-              has joined together, let no one separate.&quot;
+              &quot;Therefore what God has joined together, let no one separate&quot;
             </p>
             <p className="reveal text-shadow-wedding mt-2.5 text-[15px] tracking-[0.16em] text-[var(--ink-soft)]">
-              — Matthew 19:6 —
+              — Mark 10:9 —
             </p>
             <div className="wedding-rule reveal" />
             <p className="reveal text-shadow-wedding font-script text-[clamp(42px,11vw,58px)] leading-[1.05] text-(--ink)">
-              Joe Sawaya 
+              Ramy
               <br />
               &amp; 
               <br />
-              Elissa Haddad
+              Rachelle
             </p>
             <p className="reveal text-shadow-wedding text-[clamp(18px,4.8vw,21px)] font-semibold leading-[1.75] text-[var(--ink)]">
               Together with their families
@@ -748,7 +751,7 @@ export default function WeddingInvitation({
               Joyfully invite you to celebrate with them <br /> Their Big Day.
             </p>
             <p className="reveal text-shadow-wedding text-[clamp(18px,4.8vw,21px)] leading-[1.75] text-[var(--ink)]">
-              Sunday, 16 August 2026
+              Friday, 27 August 2027
             </p>
           </div>
         </section>
@@ -765,21 +768,18 @@ export default function WeddingInvitation({
             <div className="wedding-rule reveal my-4 max-[380px]:my-3" />
             <CalendarIcon className="reveal mx-auto block h-9 w-9 text-(--ink) drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:h-10 min-[390px]:w-10" />
             <p className="reveal text-shadow-wedding mt-1 text-[clamp(17px,4.6vw,21px)] leading-[1.55] tracking-[0.04em] text-(--ink) min-[390px]:mt-1.5 min-[390px]:leading-[1.75]">
-              August 16 · 5:30 PM
+              August 27 · Time TBD
             </p>
             <LocationIcon className="reveal mx-auto mt-5 block h-10 w-9 text-(--ink) drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)] min-[390px]:mt-[30px] min-[390px]:h-11 min-[390px]:w-10" />
             <p className="reveal text-shadow-wedding mt-1 text-[clamp(17px,4.6vw,21px)] font-semibold leading-[1.55] text-(--ink) min-[390px]:leading-[1.75]">
-              St. Mary Greek Melkite
-            </p>
-            <p className="reveal text-shadow-wedding text-[clamp(17px,4.6vw,21px)] font-semibold leading-[1.55] text-(--ink) min-[390px]:leading-[1.75]">
-              Saydet Al Intikal Church
+              St. Michael Church
             </p>
             <p className="reveal text-shadow-wedding text-[clamp(17px,4.6vw,21px)] leading-[1.55] text-(--ink) min-[390px]:leading-[1.75]">
-              Achrafieh
+              Antelias
             </p>
             <ButtonLink
               className="reveal mt-4 max-[380px]:px-5 max-[380px]:py-[11px] max-[380px]:text-sm min-[390px]:mt-[22px]"
-              href="https://maps.app.goo.gl/RJ5sp6SmUA84HkZ27?g_st=iw"
+              href="https://www.google.com/maps/search/?api=1&query=St.+Michael+Church+Antelias+Lebanon"
             >
               Church Location
             </ButtonLink>
@@ -788,11 +788,11 @@ export default function WeddingInvitation({
               Followed by Reception &amp; Dinner
             </p>
             <p className="reveal text-shadow-wedding mt-2.5 text-[clamp(17px,4.6vw,21px)] font-semibold leading-[1.55] text-(--ink) min-[390px]:mt-3.5 min-[390px]:leading-[1.75]">
-              Jardin De Stone
+              Lheritage Naher Kaleb · Time TBD
             </p>
             <ButtonLink
               className="reveal mt-4 max-[380px]:px-5 max-[380px]:py-[11px] max-[380px]:text-sm min-[390px]:mt-[18px]"
-              href="https://maps.app.goo.gl/xQmbzGiBLydWD1DK9?g_st=iw"
+              href="https://www.google.com/maps/search/?api=1&query=Lheritage+Naher+Kaleb+Lebanon"
             >
               Venue Location
             </ButtonLink>
@@ -853,7 +853,7 @@ export default function WeddingInvitation({
               Kindly RSVP
             </h2>
             <p className="reveal text-shadow-wedding mt-1.5 text-[15px] tracking-[0.14em] text-[var(--ink-soft)]">
-              Please confirm by July 1, 2026
+              Please confirm by July 1, 2027
             </p>
             <div className="wedding-rule reveal" />
             <p className="reveal text-shadow-wedding my-1.5 mb-[18px] text-[17px] tracking-[0.04em] text-[var(--ink-soft)]">
