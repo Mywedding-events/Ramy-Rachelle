@@ -508,6 +508,11 @@ export default function WeddingInvitation({
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
   const [rsvpError, setRsvpError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [experienceStarted, setExperienceStarted] = useState(false);
+  const [startOverlayVisible, setStartOverlayVisible] = useState(true);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicError, setMusicError] = useState("");
+  const audioRef = useRef<HTMLAudioElement>(null);
   const lockRef = useRef(false);
   const currentRef = useRef(0);
   const touchStartRef = useRef<number | null>(null);
@@ -570,7 +575,7 @@ export default function WeddingInvitation({
   }, [activeChromeColor, appReady]);
 
   useEffect(() => {
-    if (!appReady) return;
+    if (!appReady || !experienceStarted) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -798,7 +803,7 @@ export default function WeddingInvitation({
       window.clearTimeout(firstFallback);
       window.clearTimeout(secondFallback);
     };
-  }, [appReady, sectionIds]);
+  }, [appReady, experienceStarted, sectionIds]);
 
   useEffect(() => {
     if (!normalizedInvitationCode) {
@@ -868,6 +873,37 @@ export default function WeddingInvitation({
     setRsvps((current) => ({ ...current, [inviteeId]: value }));
   };
 
+  const startExperience = async () => {
+    const audio = audioRef.current;
+    if (!audio || experienceStarted) return;
+
+    setMusicError("");
+    audio.volume = 0.55;
+
+    try {
+      await audio.play();
+      setExperienceStarted(true);
+      window.setTimeout(() => setStartOverlayVisible(false), 900);
+    } catch {
+      setMusicError("Music could not start. Please tap again.");
+    }
+  };
+
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch {
+        setMusicError("Music could not resume.");
+      }
+    } else {
+      audio.pause();
+    }
+  };
+
   const submitRsvps = async () => {
     if (!normalizedInvitationCode || invitees.length === 0) return;
 
@@ -923,6 +959,15 @@ export default function WeddingInvitation({
 
   return (
     <>
+      <audio
+        ref={audioRef}
+        src="/uploads/music_.mp3"
+        loop
+        preload="auto"
+        onPlay={() => setMusicPlaying(true)}
+        onPause={() => setMusicPlaying(false)}
+      />
+
       <div
         className="bg-fallback fixed inset-0 z-0"
         style={{ backgroundColor: activeChromeColor }}
@@ -950,6 +995,44 @@ export default function WeddingInvitation({
         className="pointer-events-none fixed inset-0 z-[1] shadow-[inset_0_0_180px_25px_rgba(30,18,10,0.32)]"
         aria-hidden="true"
       />
+
+      {startOverlayVisible && (
+        <div
+          className={`start-overlay ${experienceStarted ? "start-overlay--leaving" : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="start-title"
+          aria-describedby="start-description"
+        >
+          <div className="start-panel">
+            <div className="start-rule" aria-hidden="true" />
+            <span className="start-diamond" aria-hidden="true" />
+
+            <h2 id="start-title" className="start-title">
+              Ramy <span>&amp;</span> Rachelle
+            </h2>
+            <p id="start-description" className="start-subtitle">
+              Together is a beautiful place to be
+            </p>
+
+            <button
+              className="start-button"
+              type="button"
+              onClick={startExperience}
+              autoFocus
+            >
+              <span>Click</span>
+              <span>to Start</span>
+            </button>
+
+            <p className="start-error" role="status">
+              {musicError}
+            </p>
+            <span className="start-diamond" aria-hidden="true" />
+            <div className="start-rule" aria-hidden="true" />
+          </div>
+        </div>
+      )}
 
       <main className="relative z-[2]">
         <section
@@ -1216,6 +1299,28 @@ export default function WeddingInvitation({
           />
         ))}
       </nav>
+
+      {experienceStarted && (
+        <button
+          className="fixed left-[18px] top-[18px] z-30 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[var(--gold-line)] bg-[rgba(35,23,16,0.34)] text-[var(--ink)] shadow-[0_5px_20px_rgba(20,12,8,0.2)] backdrop-blur-sm transition duration-300 hover:border-[var(--ink)] hover:bg-[rgba(35,23,16,0.5)] active:scale-95"
+          type="button"
+          onClick={toggleMusic}
+          aria-label={musicPlaying ? "Pause background music" : "Play background music"}
+          title={musicPlaying ? "Pause music" : "Play music"}
+        >
+          {musicPlaying ? (
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 8v4h3l4 3V5L7 8H4Z" fill="currentColor" />
+              <path d="M14 7.3c.9.8 1.4 1.7 1.4 2.7s-.5 1.9-1.4 2.7M16 5.4c1.5 1.3 2.3 2.8 2.3 4.6s-.8 3.3-2.3 4.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 8v4h3l4 3V5L7 8H4Z" fill="currentColor" />
+              <path d="m14 8 4 4m0-4-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
+      )}
     </>
   );
 }
