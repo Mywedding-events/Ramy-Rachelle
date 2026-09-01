@@ -4,10 +4,8 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const coverImage = "/uploads/IMG_0234.JPEG";
-
-const slides = [
-  coverImage,
+const fallbackSlides = [
+  "/uploads/IMG_0234.JPEG",
   "/uploads/IMG_0233.JPEG",
   "/uploads/IMG_0236.JPEG",
   "/uploads/IMG_0235.JPEG",
@@ -57,6 +55,7 @@ type InvitationResponse = {
 };
 
 const API_BASE_URL = "https://api.mywedding.events";
+const MUSIC_START_TIME = 20;
 
 function getCountdown(): Countdown {
   const remaining = Math.max(weddingDate - Date.now(), 0);
@@ -488,9 +487,12 @@ async function waitForPageAssets(signal: AbortSignal) {
 
 export default function WeddingInvitation({
   invitationCode,
+  imageSources,
 }: {
   invitationCode?: string;
+  imageSources: string[];
 }) {
+  const slides = imageSources.length > 0 ? imageSources : fallbackSlides;
   const [appReady, setAppReady] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [countdown, setCountdown] = useState<Countdown>({
@@ -879,6 +881,7 @@ export default function WeddingInvitation({
 
     setMusicError("");
     audio.volume = 0.55;
+    audio.currentTime = MUSIC_START_TIME;
 
     try {
       await audio.play();
@@ -961,7 +964,7 @@ export default function WeddingInvitation({
     <>
       <audio
         ref={audioRef}
-        src="/uploads/music_.mp3"
+        src="/uploads/_music.mp3"
         loop
         preload="auto"
         onPlay={() => setMusicPlaying(true)}
