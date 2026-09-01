@@ -91,6 +91,26 @@ function ChurchIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function CrossIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="32"
+      height="42"
+      viewBox="0 0 32 42"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M16 3v36M6 14h20"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function CelebrationIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -318,9 +338,6 @@ function WeddingJourney({ id }: { id: string }) {
             <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
               Antelias
             </h3>
-            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
-              Time TBD
-            </p>
             <a
               className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
               href="https://www.google.com/maps?q=33.9128848,35.6038602&z=17&hl=en"
@@ -339,9 +356,6 @@ function WeddingJourney({ id }: { id: string }) {
             <h3 className="text-shadow-wedding mt-1 text-[clamp(18px,4.8vw,23px)] font-semibold leading-tight text-[var(--ink)]">
               Horsh Tabet
             </h3>
-            <p className="text-shadow-wedding mt-1 text-[14px] italic text-[var(--ink-soft)]">
-              Time TBD
-            </p>
             <a
               className="mt-3 inline-block min-h-11 py-2 text-[13px] uppercase tracking-[0.14em] text-[var(--ink)] underline decoration-[var(--gold-line)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
               href="https://www.google.com/maps?q=33.8726455,35.5351834&z=17&hl=en"
@@ -1115,6 +1129,7 @@ export default function WeddingInvitation({
           data-screen-label="02 Invitation"
         >
           <div className="w-full max-w-[430px]">
+            <CrossIcon className="reveal mx-auto mb-5 h-10 w-8 text-[var(--gold)] drop-shadow-[0_2px_8px_rgba(30,18,10,0.45)]" />
             <p className="reveal text-shadow-wedding text-[clamp(19px,5.2vw,22px)] italic leading-[1.7] text-[var(--ink)]">
               &quot;Therefore what God has joined together, let no one separate&quot;
             </p>
